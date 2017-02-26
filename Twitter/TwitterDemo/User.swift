@@ -23,10 +23,16 @@ class User: NSObject {
     var profileURL: NSURL?
     var tagline: NSString?
     
+    var dictionary: NSDictionary?
+    
+    static let userDidLogoutNotification = "userLoggedOut"
+    
     //This proccess is called Desirialization. Everything that we get back from the internet, initialize it to these variables
     //Also called constructor
     init(dictionary: NSDictionary)
     {
+        self.dictionary = dictionary
+        
         name = dictionary["name"] as? NSString
         screenname = dictionary["screen_name"] as? NSString
         
@@ -39,4 +45,54 @@ class User: NSObject {
         
         tagline = dictionary["description"] as? NSString
     }
+    
+    //SAVING USER
+    
+    static var _currentUser: User?
+    
+    class var currentUser: User?
+    {
+        get
+        {
+            if _currentUser == nil
+            {
+                let defaults = UserDefaults.standard
+                let userData = defaults.object(forKey: "currentUserData") as? Data
+            
+                if let userData = userData
+                {
+                     let dictionary = try! JSONSerialization.jsonObject(with: userData as Data, options: []) as! NSDictionary
+                    _currentUser = User(dictionary: dictionary)
+                }
+                else
+                {
+                    _currentUser = nil
+                }
+            }
+            return _currentUser
+        }
+        
+        set(user)
+        {
+            _currentUser = user
+            let defaults = UserDefaults.standard
+            
+            if let user = user
+            {
+                let data = try! JSONSerialization.data(withJSONObject: user.dictionary ?? [], options: [])
+                defaults.set(data, forKey: "currentUserData")
+            }
+            else
+            {
+                defaults.removeObject(forKey: "currentUserData")
+            }
+            defaults.synchronize()
+        }
+    }
+    
 }
+
+
+
+
+

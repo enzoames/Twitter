@@ -45,6 +45,7 @@ class TwitterClient: BDBOAuth1SessionManager
                 let url = NSURL(string: "https://api.twitter.com/oauth/authorize?oauth_token=\(request)")!
                 //This next line is to open other applications. ex: when cliking on a link and it open safari to view the contents
                 //of the link. to switch out of your application to something else
+                //UIApplication.shared.canOpenURL(url as URL!)
                 UIApplication.shared.openURL(url as URL!)
             }
         },
@@ -58,15 +59,59 @@ class TwitterClient: BDBOAuth1SessionManager
     
     }
     
+    
     //||||||||||||||||||||||||||||||||||||||
-    //||||||||||HNDLE OPEN URL||||||||||||||
+    //|||||||||||||||||||LOGOUT|||||||||||||
     //||||||||||||||||||||||||||||||||||||||
     
-    func handleOpenURL()
+    func logout()
     {
+        User.currentUser = nil
+        deauthorize()
+        NotificationCenter.default.post(name: NSNotification.Name(rawValue: User.userDidLogoutNotification), object: nil)
         
+    }
     
     
+    //||||||||||||||||||||||||||||||||||||||
+    //||||||||||HANDLE OPEN URL|||||||||||||
+    //||||||||||||||||||||||||||||||||||||||
+    
+    func handleOpenURL(url: NSURL)
+    {
+        let requestToken = BDBOAuth1Credential(queryString: url.query)
+
+        //ACCESS TOKEN
+        fetchAccessToken(withPath: "oauth/access_token", method: "POST", requestToken: requestToken,
+                                 
+        success:
+        {
+            (accessToken:BDBOAuth1Credential?) -> Void in
+            print("got access token")
+            self.loginSuccess?()
+            
+            //One more network call to get account
+            self.currentAccount(
+            success:
+            {
+                (user: User) in
+                User.currentUser = user
+                self.loginSuccess?()
+            },
+            failure:
+            {
+                (error: Error) in
+                self.loginFailure?(error)
+            })
+            
+        },
+        
+        failure:
+        {
+            (error: Error?) in
+            print("error: \(error?.localizedDescription)")
+            self.loginFailure?(error!)
+        })
     }
     
     
@@ -101,11 +146,11 @@ class TwitterClient: BDBOAuth1SessionManager
     
     }
     
-    //||||||||||||||||||||||||||||||||||||||||||||||||||
-    //||||||||||||||||VERIFY CREDENTIALS||||||||||||||||
-    //||||||||||||||||||||||||||||||||||||||||||||||||||
+    //||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+    //||||||||||||||||VERIFY CREDENTIALS : CURRENT ACCOUNT||||||||||||||
+    //||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
     
-    func currentAccount()
+    func currentAccount(success: @escaping (User) -> (), failure: @escaping (Error) -> ())
     {
         get("1.1/account/verify_credentials.json", parameters: nil, progress: nil,
         
@@ -115,20 +160,21 @@ class TwitterClient: BDBOAuth1SessionManager
             //code here
             //print("account: \(response)")
             let userDictionary = response as? NSDictionary
-            
             let user = User(dictionary: userDictionary!)
-                
-            print("name: \(user.name)")
-            print("screenname: \(user.screenname)")
-            print("profile URL: \(user.profileURL)")
-            print("description: \(user.tagline)")
-                
+            
+            success(user)
+//            print("name: \(user.name)")
+//            print("screenname: \(user.screenname)")
+//            print("profile URL: \(user.profileURL)")
+//            print("description: \(user.tagline)")
+            
         },
         
         failure:
         {
             (task:URLSessionDataTask?, error:Error) in
             //code here
+            failure(error)
         })
     
     }

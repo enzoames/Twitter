@@ -18,6 +18,26 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        
+        if User.currentUser != nil
+        {
+            print("there is a current user")
+            
+            //ONCE WE SAVE THE USER AND LOG BACK IN. THIS TAKES US DIRECTLY TO THE RIGHT VIEW CONTROLLER (NOT LOGIN VIEW CONTROLLER)
+            let storyBoard = UIStoryboard(name: "Main", bundle: nil)
+            let vc = storyBoard.instantiateViewController(withIdentifier: "TweetsNavigationController")
+            window?.rootViewController = vc
+        }
+        
+        NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: User.userDidLogoutNotification), object: nil, queue: OperationQueue.main)
+        {
+            (Notification) in
+            let storyBoard = UIStoryboard(name: "Main", bundle: nil)
+            let vc = storyBoard.instantiateInitialViewController()
+            self.window?.rootViewController = vc
+        }
+        
+    
         return true
     }
 
@@ -45,39 +65,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any] = [:]) -> Bool
     {
-        let client = TwitterClient.sharedInstance
-        
-        client?.handleOpenURL()
-
-        let requestToken = BDBOAuth1Credential(queryString: url.query)
-        
-        //ACCESS TOKEN
-        client?.fetchAccessToken(withPath: "oauth/access_token", method: "POST", requestToken: requestToken,
-        
-        success:
-        {
-            (accessToken:BDBOAuth1Credential?) -> Void in
-            print("got access token")
-            
-            client?.homeTimeline(success: { (tweets: [Tweet]) in
-                for tweet in tweets
-                {
-                    print(tweet.text)
-                }
-            }, failure: { (error: Error) in
-                print(error.localizedDescription)
-            })
-            client?.currentAccount()
-
-            
-        },
-        
-        failure:
-        {
-            (error: Error?) in
-            print("error: \(error?.localizedDescription)")
-        })
-        
+        TwitterClient.sharedInstance?.handleOpenURL(url: url as NSURL)
         
         return true
     }

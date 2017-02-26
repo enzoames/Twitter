@@ -34,13 +34,15 @@ class Tweet: NSObject {
     {
         var tweets = [Tweet]()
         
-        for dictionary in dictionaries
-        {
-            let tweet = Tweet(dictionary: dictionary)
-            
-            tweets.append(tweet)
-        }
-    
+//        for dictionary in dictionaries
+//        {
+//            let tweet = Tweet(dictionary: dictionary)
+//            
+//            tweets.append(tweet)
+//        }
+
+        dictionaries.forEach { (dictionary) in tweets.append(Tweet(dictionary: dictionary)) }
+        
     return tweets
         
     }
