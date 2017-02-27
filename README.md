@@ -2,7 +2,7 @@
 
 **Twitter** is a basic twitter app to read and compose tweets the [Twitter API](https://apps.twitter.com/).
 
-Time spent: **X** hours spent in total
+Time spent: **20** hours spent in total
 
 ## User Stories
 
@@ -28,6 +28,10 @@ Please list two areas of the assignment you'd like to **discuss further with you
 ## Video Walkthrough
 
 Here's a walkthrough of the app
+
+[FLICKZ](https://github.com/enzoames/Twitter/blob/master/Twitter/TwitterDemo.gif)
+
+![Alt text](https://github.com/enzoames/Twitter/blob/master/Twitter/TwitterDemo.gif)
 
 
 
