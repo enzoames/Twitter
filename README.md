@@ -29,7 +29,7 @@ Please list two areas of the assignment you'd like to **discuss further with you
 
 Here's a walkthrough of the app
 
-[FLICKZ](https://github.com/enzoames/Twitter/blob/master/Twitter/TwitterDemo.gif)
+[TWITTER](https://github.com/enzoames/Twitter/blob/master/Twitter/TwitterDemo.gif)
 
 ![Alt text](https://github.com/enzoames/Twitter/blob/master/Twitter/TwitterDemo.gif)
 
