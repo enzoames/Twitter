@@ -31,10 +31,9 @@ class TwitterClient: BDBOAuth1SessionManager
         loginSuccess = success
         loginFailure = failure
         
-        TwitterClient.sharedInstance?.deauthorize() //logs out from any previous sessions
+        deauthorize() //logs out from any previous sessions
         
-        TwitterClient.sharedInstance?.fetchRequestToken(withPath: "oauth/request_token", method: "GET", callbackURL: NSURL(string: "TwitterDemo://oauth") as URL!, scope: nil,
-        
+        fetchRequestToken(withPath: "oauth/request_token", method: "GET", callbackURL: NSURL(string: "TwitterDemo://oauth") as URL!, scope: nil,
         success:
         {
             (requestToken: BDBOAuth1Credential?) -> Void in
@@ -42,11 +41,11 @@ class TwitterClient: BDBOAuth1SessionManager
             //Added as a quary parameterw
             if let request = requestToken?.token
             {
-                let url = NSURL(string: "https://api.twitter.com/oauth/authorize?oauth_token=\(request)")!
+                let url = URL(string: "https://api.twitter.com/oauth/authorize?oauth_token=\(request)")!
                 //This next line is to open other applications. ex: when cliking on a link and it open safari to view the contents
                 //of the link. to switch out of your application to something else
                 //UIApplication.shared.canOpenURL(url as URL!)
-                UIApplication.shared.openURL(url as URL!)
+                UIApplication.shared.open(url, options: [:], completionHandler: nil)
             }
         },
         
@@ -178,6 +177,121 @@ class TwitterClient: BDBOAuth1SessionManager
         })
     
     }
+    
+    func tweetFromTimeline(withID: Int, success: @escaping (Tweet) -> (Void), failure: @escaping (Error) -> (Void)) {
+        
+        get("1.1/statuses/home_timeline.json",
+            parameters: ["max_id": withID, "count": 1],
+            progress: nil,
+            success: { (task: URLSessionDataTask, response: Any?) in
+                
+                let dictionary = (response as! [NSDictionary]).first
+                let tweet = Tweet(dictionary: dictionary!)
+                success(tweet)
+                
+        }) { (task: URLSessionDataTask?, error: Error) in
+            
+            // call did not succeed
+            failure(error)
+            
+        }
+    }
+    
+    
+    func favorite(id: Int, success: @escaping (Tweet) -> Void, failure: @escaping (Error) -> Void) {
+        
+        post("1.1/favorites/create.json?id=\(id)", parameters: nil, progress: nil, success: { (task: URLSessionDataTask, response: Any?) in
+            
+            let tweetDict = response as! NSDictionary
+            
+            let tweet = Tweet(dictionary: tweetDict)
+            
+            success(tweet)
+            
+        }) { (task: URLSessionDataTask?, error: Error) in
+            
+            // call did not succeed
+            failure(error)
+        }
+        
+    }
+    
+    func unfavorite(id: Int, success: @escaping (Tweet) -> Void, failure: @escaping (Error) -> Void) {
+        
+        post("1.1/favorites/destroy.json?id=\(id)", parameters: nil, progress: nil, success: { (task: URLSessionDataTask, response: Any?) in
+            
+            let tweetDict = response as! NSDictionary
+            
+            let tweet = Tweet(dictionary: tweetDict)
+            
+            success(tweet)
+            
+        }) { (task: URLSessionDataTask?, error: Error) in
+            
+            // call did not succeed
+            failure(error)
+        }
+        
+    }
+    
+    func retweet(id: Int, success: @escaping (Tweet) -> Void, failure: @escaping (Error) -> Void) {
+        
+        post("1.1/statuses/retweet/\(id).json", parameters: nil, progress: nil, success: { (task: URLSessionDataTask, response: Any?) in
+            
+            let tweetDict = response as! NSDictionary
+            
+            let tweet = Tweet(dictionary: tweetDict)
+            
+            success(tweet)
+            
+        }) { (task: URLSessionDataTask?, error: Error) in
+            
+            // call did not succeed
+            failure(error)
+        }
+        
+    }
+    
+    func unretweet(tweet: Tweet, success: @escaping (Tweet) -> Void, failure: @escaping (Error) -> Void) {
+        
+        let id = tweet.isRetweeted! ? tweet.originalTweetID : tweet.id
+        print("isRetweeted: \(tweet.isRetweeted!)")
+        print("originalTweetID: \(tweet.originalTweetID!)")
+        print("tweetID: \(tweet.id!)")
+        print("ID: \(id!)")
+        
+        get("1.1/statuses/show.json?id=\(id!)", parameters: ["include_my_retweet": true], progress: nil, success: { (task: URLSessionDataTask, response: Any?) in
+            
+            let dictionary = response as! NSDictionary
+            if let currentUserRetweetID = dictionary.value(forKeyPath: "current_user_retweet.id") {
+                
+                self.post("1.1/statuses/destroy/\(currentUserRetweetID).json",
+                    parameters: nil,
+                    progress: nil,
+                    success: { (task: URLSessionDataTask, response: Any?) in
+                        
+                        self.tweetFromTimeline(withID: tweet.id!, success: success, failure: failure)
+                        
+                },
+                    failure: { (task: URLSessionDataTask?, error: Error) in
+                        
+                        // code did not succeed
+                        failure(error)
+                })
+                
+            } else {
+                preconditionFailure("Error: couldn't get current_user_retweet.id")
+            }
+            
+        }) { (task: URLSessionDataTask?, error: Error) in
+            
+            failure(error)
+            
+        }
+    }
+
+
+    
     
     
 }

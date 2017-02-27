@@ -18,10 +18,10 @@ import UIKit
 class User: NSObject {
     
     //All of these variables are optional (?) because there might be a change that nothing might be found in them (nil)
-    var name: NSString?
-    var screenname: NSString?
-    var profileURL: NSURL?
-    var tagline: NSString?
+    var name: String?
+    var screenname: String?
+    var profileUrl: URL?
+    var tagline: String?
     
     var dictionary: NSDictionary?
     
@@ -33,18 +33,23 @@ class User: NSObject {
     {
         self.dictionary = dictionary
         
-        name = dictionary["name"] as? NSString
-        screenname = dictionary["screen_name"] as? NSString
+        name = dictionary["name"] as? String
+        screenname = dictionary["screen_name"] as? String
+        tagline = dictionary["description"] as? String
         
-        let profileURLString = dictionary["profile_image_url_https"] as? NSString
-        
-        if let profileURLString = profileURLString
+        let profileUrlString = dictionary["profile_image_url_https"] as? String
+        if let profileUrlString = profileUrlString
         {
-            profileURL = NSURL(string: profileURLString as String)
+            profileUrl = URL(string: profileUrlString)
+        }
+        else
+        {
+            profileUrl = URL(string: "")
         }
         
-        tagline = dictionary["description"] as? NSString
+        
     }
+    
     
     //SAVING USER
     

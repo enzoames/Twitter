@@ -96,10 +96,10 @@
 		C67CD4D21E5CBF3F0044024D /* TwitterDemo */ = {
 			isa = PBXGroup;
 			children = (
+				C67CD4E71E5CC2E50044024D /* View Controllers */,
 				C63E27E01E6391DE00F69D60 /* Cell */,
 				C6E8CD511E5E439500240842 /* Models */,
 				C6E8CD501E5E438600240842 /* API */,
-				C67CD4E71E5CC2E50044024D /* View Controllers */,
 				C67CD4D31E5CBF3F0044024D /* AppDelegate.swift */,
 				C67CD4D71E5CBF3F0044024D /* Main.storyboard */,
 				C67CD4DA1E5CBF3F0044024D /* Assets.xcassets */,
