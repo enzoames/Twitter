@@ -50,6 +50,11 @@ class TweetsViewController: UIViewController {
     
 }
 
+//||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+//|||||||||||TABLEVIEW EXTENSION - FROM TWEETSVIEWCONTROLLER||||||||||||||||||
+//||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+
+
 extension TweetsViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -78,9 +83,17 @@ extension TweetsViewController: UITableViewDataSource, UITableViewDelegate {
     
 }
 
+
+
+//||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+//|||||||||||TWEETCELLDELEGATE - FROM TWEETSVIEWCONTROLLER||||||||||||||||||
+//||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+
+
 extension TweetsViewController: TweetCellDelegate {
     
-    func favoriteTapped(tweet: Tweet?, indexPath: IndexPath) {
+    func favoriteTapped(tweet: Tweet?, indexPath: IndexPath)
+    {
         //let cell = tableView.dequeueReusableCell(withIdentifier: "TweetCell", for: indexPath) as! TweetCell
         let tweetIndex = self.tweets.index(of: tweet!)
         
@@ -113,25 +126,35 @@ extension TweetsViewController: TweetCellDelegate {
         
     }
     
-    func retweetTapped(tweet: Tweet?, indexPath: IndexPath) {
+    func retweetTapped(tweet: Tweet?, indexPath: IndexPath)
+    {
         
         // let cell = tableView.cellForRow(at: indexPath) as! TweetCell
         let tweetIndex = self.tweets.index(of: tweet!)
         
-        if (tweet?.isRetweeted)! {
-            TwitterClient.sharedInstance?.unretweet(tweet: tweet!, success: { (tweet: Tweet) in
+        if (tweet?.isRetweeted)!
+        {
+                TwitterClient.sharedInstance?.unretweet(tweet: tweet!, success: { (tweet: Tweet) in
                 //cell.tweet = tweet
                 self.tweets[tweetIndex!] = tweet
                 self.tableView.reloadRows(at: [indexPath], with: .automatic)
-            }, failure: { (error: Error) in
+            },
+            failure:
+            {
+                (error: Error) in
                 print("ERROR: \(error.localizedDescription)")
             })
-        } else {
+        }
+        else
+        {
             TwitterClient.sharedInstance?.retweet(id: (tweet?.id)!, success: { (tweet: Tweet) in
-                //cell.tweet = tweet
-                self.tweets[tweetIndex!] = tweet
-                self.tableView.reloadRows(at: [indexPath], with: .automatic)
-            }, failure: { (error: Error) in
+            //cell.tweet = tweet
+            self.tweets[tweetIndex!] = tweet
+            self.tableView.reloadRows(at: [indexPath], with: .automatic)
+            },
+            failure:
+            {
+                (error: Error) in
                 print("ERROR: \(error.localizedDescription)")
             })
         }

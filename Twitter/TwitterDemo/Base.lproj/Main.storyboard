@@ -141,11 +141,11 @@
                                                     </connections>
                                                 </button>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GYo-e9-pgp">
-                                                    <rect key="frame" x="184" y="95" width="25" height="24"/>
+                                                    <rect key="frame" x="184" y="92" width="25" height="30"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="25" id="fID-mR-Cd4"/>
                                                     </constraints>
-                                                    <state key="normal" image="favor-icon-1"/>
+                                                    <state key="normal" image="favor-icon"/>
                                                     <connections>
                                                         <action selector="onFavorite:" destination="7Xb-Pe-nnA" eventType="touchUpInside" id="prr-hI-CKQ"/>
                                                     </connections>
@@ -233,7 +233,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="favor-icon-1" width="24" height="24"/>
+        <image name="favor-icon" width="30" height="30"/>
         <image name="reply-icon" width="30" height="30"/>
         <image name="retweet-icon" width="30" height="30"/>
     </resources>

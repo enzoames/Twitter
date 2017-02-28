@@ -102,19 +102,19 @@ class TweetCell: UITableViewCell {
     func setIcons() {
         
         if tweet.isFavorited! {
-            favoritesLabel.textColor = #colorLiteral(red: 0.7450980544, green: 0.1568627506, blue: 0.07450980693, alpha: 1)
+            //favoritesLabel.textColor = #colorLiteral(red: 0.7450980544, green: 0.1568627506, blue: 0.07450980693, alpha: 1)
             favoriteButton.imageView?.image = UIImage(named: "favor-icon-red")
         } else {
-            favoritesLabel.textColor = #colorLiteral(red: 0.6000000238, green: 0.6000000238, blue: 0.6000000238, alpha: 1)
+            //favoritesLabel.textColor = #colorLiteral(red: 0.6000000238, green: 0.6000000238, blue: 0.6000000238, alpha: 1)
             favoriteButton.imageView?.image = UIImage(named: "favor-icon")
         }
         
         if tweet.isRetweeted! {
-            retweetCountsLabel.textColor = #colorLiteral(red: 0.4666666687, green: 0.7647058964, blue: 0.2666666806, alpha: 1)
+            //retweetCountsLabel.textColor = #colorLiteral(red: 0.4666666687, green: 0.7647058964, blue: 0.2666666806, alpha: 1)
             retweetButton.imageView?.image = UIImage(named: "retweet-icon-green")
             
         } else {
-            retweetCountsLabel.textColor = #colorLiteral(red: 0.6000000238, green: 0.6000000238, blue: 0.6000000238, alpha: 1)
+            //retweetCountsLabel.textColor = #colorLiteral(red: 0.6000000238, green: 0.6000000238, blue: 0.6000000238, alpha: 1)
             retweetButton.imageView?.image = UIImage(named: "retweet-icon")
         }
     }

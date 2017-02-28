@@ -47,7 +47,6 @@ class User: NSObject {
             profileUrl = URL(string: "")
         }
         
-        
     }
     
     

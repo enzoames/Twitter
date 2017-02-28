@@ -10,7 +10,11 @@ import UIKit
 
 class Tweet: NSObject {
     
-    // Properties
+    //||||||||||||||||||||||||||||||||
+    //|||||||||||VARIABLES||||||||||||
+    //||||||||||||||||||||||||||||||||
+
+    
     var name: String?
     //    var user: User?
     var ownerHandle: String?
@@ -27,10 +31,14 @@ class Tweet: NSObject {
     var originalTweetID: Int?
     var retweetedBy: String?
     
-    // Constructor
-    init(dictionary: NSDictionary) {
+    
+    //||||||||||||||||||||||||||||||||
+    //|||||||||||CONSTRUCTOR||||||||||
+    //||||||||||||||||||||||||||||||||
+
+    init(dictionary: NSDictionary)
+    {
         
-        // initialize properties
         text = dictionary["text"] as? String
         retweetText = dictionary["retweet_text"] as? String
         
@@ -73,15 +81,27 @@ class Tweet: NSObject {
         
     }
     
+    //|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+    //|||||||||||CONVERT EVERY ELEMENT IN NSDictionary TO A TWEET||||||||||||
+    //|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+
+    
     class func tweetsWithArray(dictionaries: [NSDictionary]) -> [Tweet] {
         
         return dictionaries.map({ (dict) -> Tweet in
-            Tweet(dictionary: dict) // convert every element in NSDictionary to a tweet
+            Tweet(dictionary: dict) //
         })
         
     }
     
-    func format(timestamp: Date?) -> String {
+    
+    //|||||||||||||||||||||||||||||||||||
+    //|||||||||||DATE FORMATTER||||||||||
+    //|||||||||||||||||||||||||||||||||||
+    
+    
+    func format(timestamp: Date?) -> String
+    {
         
         if let timestamp = timestamp {
             
@@ -118,15 +138,16 @@ class Tweet: NSObject {
         
     }
     
-    func format(count: Int) -> String {
-        if count < 1000 || count == 0 {
+    func format(count: Int) -> String
+    {
+        if count < 1000 || count == 0
+        {
             return "\(Int(count))"
-        } else {
+        }
+        else
+        {
             let newCount = Double(count) / 1000.0
             let myStr = String(format: "%.1fk", newCount)
-            
-            // NOTE: Debug Code
-            // print("count: \(count), new_count: \(newCount), myStr: \(myStr)")
             
             return myStr
         }
