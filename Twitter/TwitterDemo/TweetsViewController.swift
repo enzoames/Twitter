@@ -47,6 +47,43 @@ class TweetsViewController: UIViewController {
     {
         TwitterClient.sharedInstance?.logout()
     }
+
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?)
+    {
+    
+        if(segue.identifier == "showProfileSegue")
+        {
+            let profileViewController = segue.destination as! ProfileViewController
+            profileViewController.user = User.currentUser
+        }
+        
+        if(segue.identifier == "newTweetSegue")
+        {
+            if let navigationController = segue.destination as? UINavigationController
+            {
+                let singleTweetViewController = navigationController.topViewController as! SingleTweetViewController
+                singleTweetViewController.user = User.currentUser
+                singleTweetViewController.title = "Tweet"
+        
+            }
+        }
+        
+        if(segue.identifier == "selectedTweetSegue")
+        {
+            let cell = sender as! TweetCell
+            let indexPath = tableView.indexPath(for: cell)
+            let tweet = tweets[indexPath!.row]
+            
+            let selectedTweetViewController = segue.destination as! SelectedTweetViewController
+            selectedTweetViewController.indexPath = indexPath
+            selectedTweetViewController.tweet = tweet
+        }
+        
+        
+    }
+    
+    
     
 }
 

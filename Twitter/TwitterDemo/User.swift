@@ -17,15 +17,28 @@ import UIKit
 
 class User: NSObject {
     
+    //||||||||||||||||||||||||||||||||||||||||||||
+    //||||||||OUTLETS AND VARIABLES|||||||||||||||
+    //||||||||||||||||||||||||||||||||||||||||||||
     //All of these variables are optional (?) because there might be a change that nothing might be found in them (nil)
     var name: String?
     var screenname: String?
     var profileUrl: URL?
     var tagline: String?
     
+    var followerCount: Int?
+    var followingCount: Int?
+    var tweetCount: Int?
+    var profileBackgroundURL: URL?
+    
     var dictionary: NSDictionary?
     
     static let userDidLogoutNotification = "userLoggedOut"
+    
+    
+    //||||||||||||||||||||||||||||||||||||||
+    //||||||||DESIRIALIZATION|||||||||||||||
+    //||||||||||||||||||||||||||||||||||||||
     
     //This proccess is called Desirialization. Everything that we get back from the internet, initialize it to these variables
     //Also called constructor
@@ -37,6 +50,13 @@ class User: NSObject {
         screenname = dictionary["screen_name"] as? String
         tagline = dictionary["description"] as? String
         
+        followingCount = dictionary["friends_count"] as? Int
+        followerCount = dictionary["followers_count"] as? Int
+        tweetCount = dictionary["statuses_count"] as? Int
+
+        
+        
+        //CODE TO FETCH PROFILE IMAGE
         let profileUrlString = dictionary["profile_image_url_https"] as? String
         if let profileUrlString = profileUrlString
         {
@@ -47,10 +67,26 @@ class User: NSObject {
             profileUrl = URL(string: "")
         }
         
+        
+        //CODE TO FETCH PROFILE BACKGROUND
+        let profileBackgroundUrlString = dictionary["profile_background_image_url_https"] as? String
+        if let profileBackgroundUrlString = profileBackgroundUrlString
+        {
+            profileBackgroundURL = URL(string: profileBackgroundUrlString)
+        }
+        else
+        {
+            profileBackgroundURL = URL(string: "")
+        }
+        
+        
+        
     }
     
     
-    //SAVING USER
+    //||||||||||||||||||||||||||||||||||
+    //||||||||SAVING USER|||||||||||||||
+    //||||||||||||||||||||||||||||||||||
     
     static var _currentUser: User?
     

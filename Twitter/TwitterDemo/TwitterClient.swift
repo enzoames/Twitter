@@ -317,6 +317,53 @@ class TwitterClient: BDBOAuth1SessionManager
             
         }
     }
+    
+    
+    //||||||||||||||||||||||||||||||||
+    //||||||||||||||TWEET|||||||||
+    //||||||||||||||||||||||||||||||||
+    
+    
+    func tweet(tweetTxt: String, inReplyTo: String? = nil, success: @escaping (Tweet) -> (), failure: @escaping (Error) -> ())
+    {
+        if inReplyTo != nil
+        {
+            post("1.1/statuses/update.json", parameters: ["status": tweetTxt, "in_reply_to_status_id": inReplyTo], progress: nil,
+                
+            success:
+            {
+                (task: URLSessionDataTask, response: Any?) in
+                
+                let dictionary = response as! NSDictionary
+                let tweet = Tweet(dictionary: dictionary)
+                success(tweet)
+                
+            })
+            {
+                (task: URLSessionDataTask?, error: Error) in
+                failure(error)
+            }
+        }
+        else {
+            post("1.1/statuses/update.json", parameters: ["status": tweetTxt], progress: nil,
+            success:
+            {
+                (task: URLSessionDataTask, response: Any?) in
+                
+                let dictionary = response as! NSDictionary
+                let tweet = Tweet(dictionary: dictionary)
+                success(tweet)
+                
+            })
+            {
+                (task: URLSessionDataTask?, error: Error) in
+                failure(error)
+            }
+        }
+    }
+    
+    
+    
 
 }
 

@@ -33,9 +33,9 @@ Here's a walkthrough of the app
 
 ![Alt text](https://github.com/enzoames/Twitter/blob/master/Twitter/TwitterDemo.gif)
 
-[TWITTER2](https://github.com/enzoames/Twitter/blob/master/Twitter/TwitterDemo.gif)
+[TWITTER2](https://github.com/enzoames/Twitter/blob/master/Twitter/TwitterDemo2.gif)
 
-![Alt text](https://github.com/enzoames/Twitter/blob/master/Twitter/TwitterDemo.gif)
+![Alt text](https://github.com/enzoames/Twitter/blob/master/Twitter/TwitterDemo2.gif)
 
 
 

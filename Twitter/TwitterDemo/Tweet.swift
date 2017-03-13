@@ -16,7 +16,7 @@ class Tweet: NSObject {
 
     
     var name: String?
-    //    var user: User?
+    var user: User!
     var ownerHandle: String?
     var ownerAvatarURL: URL?
     var text: String?
@@ -27,7 +27,10 @@ class Tweet: NSObject {
     var isFavorited: Bool?
     var isRetweetStatus: Bool
     var isRetweeted: Bool?
+    
     var id: Int?
+    var idAsString: String?
+    
     var originalTweetID: Int?
     var retweetedBy: String?
     
@@ -39,11 +42,17 @@ class Tweet: NSObject {
     init(dictionary: NSDictionary)
     {
         
+        let userr = dictionary["user"] as? NSDictionary
+        self.user = User(dictionary: userr!)
+
+        
         text = dictionary["text"] as? String
         retweetText = dictionary["retweet_text"] as? String
         
         retweet_count = (dictionary["retweet_count"] as? Int) ?? 0
         favorites_count = (dictionary["favorite_count"] as? Int) ?? 0
+        
+        idAsString = dictionary["id_str"] as? String
         
         let timestampString = dictionary["created_at"] as? String
         
@@ -73,6 +82,7 @@ class Tweet: NSObject {
             originalTweetID = id
             userData = dictionary["user"] as! NSDictionary
         }
+        
         
         let user = User(dictionary: userData)
         name = user.name
